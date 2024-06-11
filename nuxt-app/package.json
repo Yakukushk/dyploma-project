@@ -1,0 +1,42 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-regular-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/vue-fontawesome": "^3.0.6",
+    "@mdi/font": "^7.4.47",
+    "@pinia/nuxt": "^0.5.1",
+    "@vueuse/motion": "^2.1.0",
+    "aos": "^2.3.4",
+    "chart.js": "^4.4.2",
+    "firebase": "^10.12.2",
+    "leaflet": "^1.9.4",
+    "nuxt": "^3.11.2",
+    "nuxt-sweetalert2": "^1.0.0",
+    "pinia": "^2.1.7",
+    "sweetalert2": "^11.6.13",
+    "vue": "^3.4.21",
+    "vue-chartjs": "^5.3.1",
+    "vue-router": "^4.3.0",
+    "vuetify": "^3.6.6"
+  },
+  "devDependencies": {
+    "@nuxtjs/google-fonts": "^3.2.0",
+    "@types/aos": "^3.0.7",
+    "nuxt3-leaflet": "^1.0.12",
+    "sass": "^1.77.4",
+    "vee-validate": "^4.12.6",
+    "vite-plugin-vuetify": "^2.0.3"
+  }
+}
