@@ -19,6 +19,7 @@
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/motion": "^2.1.0",
     "aos": "^2.3.4",
+    "axios": "^1.7.2",
     "chart.js": "^4.4.2",
     "firebase": "^10.12.2",
     "leaflet": "^1.9.4",
