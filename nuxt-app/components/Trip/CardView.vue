@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import {useFireStore} from "~/firebase/firestore";
+import {useStore} from "~/composables/store";
+
 const store = useStore();
+const firestore = useFireStore();
 const prop = reactive(new Property({}, {
   section: 'section-container',
   card: 'card'
@@ -13,6 +17,7 @@ const formDate = (date: Date | any) => {
     day: 'numeric'
   });
 };
+
 </script>
 
 <template>
@@ -45,7 +50,6 @@ const formDate = (date: Date | any) => {
               color="deep-purple-accent-4"
           >
             <v-tab :value="1">Explore</v-tab>
-            <v-tab :value="2">Hotels</v-tab>
             <v-tab :value="3">Itinerary</v-tab>
             <v-tab :value="3">Budget</v-tab>
           </v-tabs>

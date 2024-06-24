@@ -1,6 +1,6 @@
 import vuetify, {transformAssetUrls} from 'vite-plugin-vuetify'
 import {resolve} from "path"
-
+import type { NuxtPage } from 'nuxt/schema'
 export default defineNuxtConfig({
     alias: {
         "@": resolve(__dirname, "/")

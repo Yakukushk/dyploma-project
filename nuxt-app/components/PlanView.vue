@@ -2,11 +2,13 @@
 import { reactive, ref } from 'vue';
 import { useStore } from '~/composables/store';
 import { Property } from '~/composables/property';
+import {useFireStore} from "~/firebase/firestore";
 
 
 
 const store = useStore();
 const router = useRouter();
+const firestore = useFireStore();
 const prop = reactive(new Property({
   btn: {
     color: 'white',
@@ -42,7 +44,7 @@ const addMethod = async() => {
   await router.push('/trip');
 }
 const allowedDates = (date: string) => new Date(date) >= today;
-
+onMounted(() => firestore.fetchPlans())
 </script>
 
 <template>

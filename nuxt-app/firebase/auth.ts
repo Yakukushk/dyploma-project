@@ -15,6 +15,7 @@ export const useAuth = defineStore('auth', () => {
     const email: Ref<string> = ref('');
     const password: Ref<string> = ref('');
     const user: Ref<null> = ref(null);
+    const router = useRouter();
     const googleProvider = new GoogleAuthProvider();
     const register = async (): Promise<void> => {
         try {
@@ -58,6 +59,7 @@ export const useAuth = defineStore('auth', () => {
                 icon: "error"
             });
         });
+        await router.push('/dashboard');
     }
     const logout = async () => {
         try {

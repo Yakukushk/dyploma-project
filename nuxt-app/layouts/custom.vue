@@ -46,8 +46,9 @@ const login = () => {
 const register = () => {
   authStore.register().catch((e: string | any) => {
     console.error(e);
-    dialog.value = false;
-  }).then(() => dialog.value = false);
+
+  });
+  dialog.value = false;
   authStore.email = "";
   authStore.password = "";
 
