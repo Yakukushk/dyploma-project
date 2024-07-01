@@ -1,8 +1,72 @@
 <script setup lang="ts">
+//@ts-ignore
 import type {Ref} from 'vue'
 import {useAuth} from "~/firebase/auth";
+//@ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import UserDataService from "~/service/userDataService";
+import axios from "axios";
 
 const auth = useAuth();
+const service = new UserDataService();
+const router = useRouter();
+const email = ref<string>("");
+const password = ref<string>("");
+const role = ref<string>("");
+const items = reactive([
+  'Member',
+  'Manager'
+]);
+const login = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(token) {
+       const response = await service.getUsers();
+      alert(`User ${response.data.email.result} is already logged in`);
+    } else {
+      const response = await axios.post('https://localhost:7080/login', {
+        email: email.value,
+        password: password.value
+      }, {
+        headers: {
+          "Content-type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      console.log('Response data:', response.data);
+
+      localStorage.setItem('token', response.data.accessToken);
+
+      await service.getUsers();
+      await router.push('/dashboard');
+    }
+  } catch (error) {
+    console.error('Error during login request:', error);
+  }
+}
+const register = async () => {
+  try {
+    const response = await service.apiClient.post('/User/Register', {
+      email: email.value,
+      password: password.value,
+      role: role.value
+    });
+    localStorage.setItem('token', JSON.stringify(response.data.accessToken));
+    console.log(response.data);
+  } catch (e) {
+    console.error(e);
+  }
+
+}
+
+
+const checkValidation = () => {
+  if (!email.value) {
+    email.value.focus();
+    Swal.fire("Give email");
+  }
+}
 
 interface IProps {
   dialog: boolean,
@@ -37,7 +101,7 @@ const show1 = ref(false);
       >
         <v-card-text>
           <v-text-field
-              v-model="auth.email"
+              v-model="email"
               label="Email*"
               color="purple"
               placeholder="johndoe@gmail.com"
@@ -47,7 +111,7 @@ const show1 = ref(false);
           ></v-text-field>
 
           <v-text-field
-              v-model="auth.password"
+              v-model="password"
               :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
               label="Password*"
               color="purple"
@@ -57,7 +121,15 @@ const show1 = ref(false);
               hint="Enter your password to access this website"
               required
           ></v-text-field>
-
+          <v-select
+              v-model="role"
+              :items="items"
+              item-title="Role"
+              label="Select"
+              persistent-hint
+              return-object
+              single-line
+          ></v-select>
 
           <small class="text-caption text-medium-emphasis">*indicates required field</small>
           <br/>
@@ -84,7 +156,7 @@ const show1 = ref(false);
           ></v-btn>
 
           <v-btn
-              @click="emit('register')"
+              @click="register"
               color="purple"
               text="Create user"
               variant="plain"
@@ -99,13 +171,13 @@ const show1 = ref(false);
       >
         <v-card-text>
           <v-text-field
-              v-model="auth.email"
+              v-model="email"
               label="Email*"
               required
           ></v-text-field>
 
           <v-text-field
-              v-model="auth.password"
+              v-model="password"
               label="Password*"
               type="password"
               required
@@ -114,7 +186,7 @@ const show1 = ref(false);
             <v-icon icon="mdi-google" start></v-icon>
             Sign up by Google
           </v-btn>
-<br/>
+          <br/>
 
           <small class="text-caption text-medium-emphasis mt-4">*indicates required field</small>
           <br/>
@@ -141,7 +213,7 @@ const show1 = ref(false);
           ></v-btn>
 
           <v-btn
-              @click="emit('login')"
+              @click="login"
               color="purple"
               text="Save"
               variant="plain"
