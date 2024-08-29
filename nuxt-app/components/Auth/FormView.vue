@@ -30,7 +30,8 @@ const login = async () => {
       }, {
         headers: {
           "Content-type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem('token')}`
+          "Authorization": `Bearer ${localStorage.getItem('token')}`,
+          withCredentials: true
         }
       });
 
@@ -52,7 +53,7 @@ const register = async () => {
       password: password.value,
       role: role.value
     });
-    localStorage.setItem('token', JSON.stringify(response.data.accessToken));
+    // localStorage.setItem('token', JSON.stringify(response.data.accessToken));
     console.log(response.data);
   } catch (e) {
     console.error(e);
@@ -61,10 +62,10 @@ const register = async () => {
 }
 
 
-const checkValidation = () => {
+const checkValidation = async() => {
   if (!email.value) {
     email.value.focus();
-    Swal.fire("Give email");
+    await Swal.fire("Give email");
   }
 }
 

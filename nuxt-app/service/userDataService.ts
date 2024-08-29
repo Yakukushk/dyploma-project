@@ -93,7 +93,7 @@ import axios from "axios";
                     }
                 });
                 console.log(response.data);
-                return response;
+                return response.data;
             } catch (e) {
                 console.error(e);
                 throw createError({
@@ -101,5 +101,25 @@ import axios from "axios";
                     statusMessage: 'Failed to fetch data Users'
                 });
             }
+        }
+        async logOut() : Promise<any> {
+            try {
+                const token: string | any = localStorage.getItem('token');
+                const response = await axios.post(`${USER_API_URL_USER}/logout`, {}, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                localStorage.removeItem('token');
+                console.log(response.data);
+                return response;
+            } catch (e) {
+                console.error(e);
+                throw createError({
+                    statusCode: 500,
+                    statusMessage: 'Failed to logout'
+                });
+            }
+
         }
     }

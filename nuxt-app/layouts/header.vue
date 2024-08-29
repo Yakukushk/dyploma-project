@@ -5,11 +5,15 @@ import { auth } from "~/firebase/connection";
 import { useAuth } from "~/firebase/auth";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/src/sweetalert2.scss'
-import type { Ref } from "vue";
+import { onMounted } from "vue";
+import UserDataService from "~/service/userDataService";
 
 const authStore = useAuth();
 const router = useRouter();
+const service = new UserDataService();
 
+const username = ref(null);
+console.log(JSON.stringify(username.result));
 const resources = ref([
   'About us',
   'FAQ'
@@ -64,12 +68,12 @@ const nav = reactive(new NavDrawers(false, null, items, { backgroundColor: 'blue
 
 const logout = async () => {
   try {
-    await authStore.logout();
+    await service.logOut();
     await Swal.fire({
       title: 'User was logged out',
       text: "You clicked the button!",
     });
-    await router.push('/');
+    await router.push("/");
   } catch (e) {
     console.error(e);
   }
@@ -84,6 +88,22 @@ watch(() => auth.currentUser, (newUser) => {
     loading.value = false;
   }
 }, { immediate: true });
+
+onMounted(async () => {
+  try {
+    const response = await service.getUsers();
+    
+      username.value = response.result;
+   
+  }
+  catch (error) {
+    console.error('Error fetching username:', error);
+  } finally {
+    loading.value = false;
+  }
+
+
+})
 </script>
 
 <template>
@@ -93,7 +113,7 @@ watch(() => auth.currentUser, (newUser) => {
         <v-row>
           <v-col cols="7" class="ml-5">
             <a href="#!" class="nav-logo">
-              <font-awesome-icon icon="fa-solid fa-plane-departure" style="width: 30px; height: 30px"/>
+              <font-awesome-icon icon="fa-solid fa-plane-departure" style="width: 30px; height: 30px" />
             </a>
           </v-col>
           <v-col>
@@ -116,8 +136,12 @@ watch(() => auth.currentUser, (newUser) => {
             <v-menu open-on-hover>
               <template v-slot:activator="{ props }">
                 <v-btn v-bind="props" :style="classObject">
-                  <div v-if="loading">{{ auth.currentUser?.email }}</div>
-                  <v-progress-linear v-else color="deep-purple-accent-4" indeterminate rounded></v-progress-linear>
+                  <div v-if="loading">
+                    <v-progress-linear color="deep-purple-accent-4" indeterminate rounded></v-progress-linear>
+                  </div>
+                  <div v-else>
+                    {{ username }}
+                  </div>
                 </v-btn>
               </template>
               <v-list class="mt-4">
@@ -126,7 +150,7 @@ watch(() => auth.currentUser, (newUser) => {
                     <v-btn variant="text">{{ item }}</v-btn>
                   </v-list-item-title>
                   <v-list-item-title>
-                    <v-btn @click="logout()" variant="text">Log out</v-btn>
+                    <v-btn @click="logout" variant="text">Log out</v-btn>
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -142,14 +166,15 @@ watch(() => auth.currentUser, (newUser) => {
             <v-spacer></v-spacer>
           </v-app-bar>
 
-          <v-navigation-drawer v-model="nav.drawer" :location="$vuetify.display.mobile ? 'bottom' : undefined" temporary>
+          <v-navigation-drawer v-model="nav.drawer" :location="$vuetify.display.mobile ? 'bottom' : undefined"
+            temporary>
             <v-list :items="nav.items"></v-list>
           </v-navigation-drawer>
         </v-layout>
       </v-card>
     </div>
   </header>
-  <slot/>
+  <slot />
 </template>
 
 <style scoped>
@@ -177,7 +202,7 @@ watch(() => auth.currentUser, (newUser) => {
   .nav-mobile {
     display: block;
     z-index: 1;
-  //margin-bottom: 90px;
+    //margin-bottom: 90px;
   }
 }
 </style>
